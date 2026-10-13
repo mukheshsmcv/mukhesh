@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      study_progress: {
+        Row: {
+          attempted: number
+          completed: boolean
+          correct: number
+          day_id: string
+          hours: number
+          notes: string
+          score: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempted?: number
+          completed?: boolean
+          correct?: number
+          day_id: string
+          hours?: number
+          notes?: string
+          score?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          attempted?: number
+          completed?: boolean
+          correct?: number
+          day_id?: string
+          hours?: number
+          notes?: string
+          score?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
