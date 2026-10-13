@@ -16,7 +16,7 @@ export function mergeSaved(saved: unknown): Row[] {
   const byId = new Map<string, Record<string, unknown>>();
   for (const r of saved) if (r && typeof r === "object" && typeof (r as Row).id === "string") byId.set((r as Row).id, r as Record<string, unknown>);
   return base.map((row) => {
-    const s = byId.get(row.id);
+    const s = byId.get(row.id) as Partial<Record<keyof Row, unknown>> | undefined;
     if (!s) return row;
     const correct = num(s.correct), attempted = num(s.attempted);
     return {

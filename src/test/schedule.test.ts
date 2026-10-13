@@ -7,8 +7,8 @@ describe("schedule", () => {
   it("has 205 unique consecutive rows", () => {
     expect(rows.length).toBe(205);
     expect(new Set(rows.map((r) => r.id)).size).toBe(205);
-    expect(rows[0].date).toBe("2026-10-12");
-    expect(rows[204].date).toBe("2027-05-04");
+    expect(rows[0]!.date).toBe("2026-10-12");
+    expect(rows[204]!.date).toBe("2027-05-04");
   });
   it("phase boundaries", () => {
     expect(on("2026-10-19").label).toBe("OBG 8/8");
