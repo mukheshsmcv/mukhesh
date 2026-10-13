@@ -22,13 +22,13 @@ export const TOTAL_DAYS = 205;
 export const TOTAL_GTS = 16;
 
 function addDays(iso: string, n: number): string {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = iso.split("-").map(Number);
   const t = new Date(Date.UTC(y, m - 1, d + n));
   return t.toISOString().slice(0, 10);
 }
 
 export function formatDate(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = iso.split("-").map(Number);
   return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-GB", {
     weekday: "short", day: "2-digit", month: "short", year: "2-digit", timeZone: "UTC",
   });
