@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { memo, useMemo, useRef, useState } from "react";
 import { PHASES, TOTAL_DAYS, formatDate, pct, type Row } from "@/lib/schedule";
 import { useSchedule } from "@/lib/store";
+import { AccountPanel, MigrationDialog, SyncBadge } from "@/components/AccountPanel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,7 +48,7 @@ function download(name: string, content: string, type: string) {
 const csvCell = (v: unknown) => `"${String(v).replace(/"/g, '""')}"`;
 
 function Index() {
-  const { rows, update, reset, replace } = useSchedule();
+  const { rows, update, reset, replace, user, status, migration, resolveMigration, retry } = useSchedule();
   const [tab, setTab] = useState<"schedule" | "progress" | "gts">("schedule");
   const [q, setQ] = useState("");
   const [phase, setPhase] = useState("all");
@@ -105,7 +106,7 @@ function Index() {
   };
   const onReset = () => {
     if (window.confirm("Reset ALL progress? This clears every checkbox, hour, MCQ, topic, score and note. This cannot be undone.\n\nTip: export a JSON backup first.")) {
-      reset(); setMsg("All progress reset.");
+      void reset(); setMsg(user ? "All progress reset (cloud and this device)." : "All progress reset.");
     }
   };
 
@@ -117,9 +118,11 @@ function Index() {
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">NEET PG 2027</p>
           <h1 className="text-2xl font-bold tracking-tight">Study Command Center</h1>
-          <p className="text-xs text-muted-foreground">12 Oct 2026 → 4 May 2027 · saved in this browser only</p>
+          <p className="text-xs text-muted-foreground">12 Oct 2026 → 4 May 2027</p>
+          <SyncBadge user={user} status={status} onRetry={() => void retry()} />
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <AccountPanel user={user} />
           <button className="btn" onClick={exportJSON}>Export JSON</button>
           <button className="btn" onClick={() => fileRef.current?.click()}>Import JSON</button>
           <button className="btn" onClick={exportCSV}>Export CSV</button>
@@ -220,7 +223,8 @@ function Index() {
         </section>
       )}
 
-      <footer className="mt-8 text-center text-[11px] text-muted-foreground">Data lives only in this browser's local storage. Export a backup regularly.</footer>
+      {migration && <MigrationDialog m={migration} onChoose={resolveMigration} />}
+      <footer className="mt-8 text-center text-[11px] text-muted-foreground">{user ? "Synced privately to your account, with a local copy on this device." : "Signed out: data lives only in this browser."} Export a backup regularly.</footer>
     </main>
   );
 }
